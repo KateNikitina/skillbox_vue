@@ -58,7 +58,7 @@ import ProductList from './components/ProductList.vue';
 
 export default {
   name: 'App',
-  component: { ProductList },
+  components: { ProductList },
   data() {
     return {
       products,
