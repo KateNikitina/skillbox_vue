@@ -1,23 +1,11 @@
 export default [
   {
-    code: '#73B6EA',
+    code: 'red',
   },
   {
-    code: '#FFBE15',
+    code: 'black',
   },
   {
-    code: '#939393',
-  },
-  {
-    code: '#8BE000',
-  },
-  {
-    code: '#FF6B00',
-  },
-  {
-    code: '#FFF',
-  },
-  {
-    code: '#000',
+    code: 'green',
   },
 ];

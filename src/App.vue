@@ -10,9 +10,9 @@
         :price-from.sync="filterPriceFrom"
         :price-to.sync="filterPriceTo"
         :category-id.sync="filterCategoryId"
-        :color-code.sync="filterColorCode" />
+        :color-code.sync="filterColorCode"/>
       <section class="catalog">
-        <ProductList :products="products" />
+        <ProductList :products="products"/>
         <BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage"/>
       </section>
     </div>
@@ -20,13 +20,13 @@
 </template>
 
 <script>
-import products from './data/products';
-import ProductList from './components/ProductList.vue';
-import BasePagination from './components/BasePagination.vue';
-import ProductFilter from './components/ProductFilter.vue';
+import products from "./data/products";
+import ProductList from "./components/ProductList.vue";
+import BasePagination from "./components/BasePagination.vue";
+import ProductFilter from "./components/ProductFilter.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: { ProductList, BasePagination, ProductFilter },
   data() {
     return {
@@ -41,10 +41,15 @@ export default {
   computed: {
     filteredProducts() {
       let filteredProducts = products;
-
+      let arr = []
       if (this.filterColorCode !== 0) {
-        filteredProducts = filteredProducts.filter((product) => product.colorCode
-          === this.filterColorCode);
+        filteredProducts.map(i => {
+          let item = i.colorCode.filter(color => {
+            return color === this.filterColorCode
+          })
+           item.length !== 0 ? arr.push(i) : "";
+        })
+        filteredProducts = arr;
       }
       if (this.filterPriceFrom > 0) {
         filteredProducts = filteredProducts.filter((product) => product.price
