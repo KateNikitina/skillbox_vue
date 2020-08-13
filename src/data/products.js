@@ -10,7 +10,11 @@ export default [
   {
     id: 2,
     categoryId: 4,
+<<<<<<< HEAD
     colorCode: ['green'],
+=======
+    colorCode: '#73B6EA',
+>>>>>>> 2c22627e1ec60c089915f98eb8073e1ab74af37a
     title: 'Honor 30 Pro+ 8/256 Гб',
     price: '48950',
     image: 'img/mob/Honor_30_Pro_8.jpg',
@@ -26,7 +30,11 @@ export default [
   {
     id: 4,
     categoryId: 1,
+<<<<<<< HEAD
     colorCode: ['red'],
+=======
+    colorCode: '#73B6EA',
+>>>>>>> 2c22627e1ec60c089915f98eb8073e1ab74af37a
     title: 'Apple iPhone SE 2020 64 Гб',
     price: '38450',
     image: 'img/mob/Apple_iPhone_SE.jpg',
