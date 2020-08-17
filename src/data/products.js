@@ -11,7 +11,7 @@ export default [
     id: 2,
     categoryId: 4,
     colorCode: ['green'],
-    title: 'Honor 30 Pro+ 8/256 Гб',
+    title: 'Honor 30 Pro+ 8/256',
     price: '48950',
     image: 'img/mob/Honor_30_Pro_8.jpg',
   },

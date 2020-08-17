@@ -12,7 +12,7 @@
         :category-id.sync="filterCategoryId"
         :color-code.sync="filterColorCode"/>
       <section class="catalog">
-        <ProductList :products="products"/>
+        <ProductList :products="products" :categories="categories"/>
         <BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage"/>
       </section>
     </div>
@@ -21,6 +21,8 @@
 
 <script>
 import products from "./data/products";
+import categories from "./data/categories";
+
 import ProductList from "./components/ProductList.vue";
 import BasePagination from "./components/BasePagination.vue";
 import ProductFilter from "./components/ProductFilter.vue";
@@ -68,6 +70,9 @@ export default {
     products() {
       const offset = (this.page - 1) * this.productsPerPage;
       return this.filteredProducts.slice(offset, offset + this.productsPerPage);
+    },
+    categories() {
+      return categories;
     },
     countProducts() {
       return this.filteredProducts.length;
