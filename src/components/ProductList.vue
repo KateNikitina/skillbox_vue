@@ -11,5 +11,6 @@ export default {
   name: 'ProductList',
   components: { ProductItem },
   props: ['products', 'categories'],
+
 };
 </script>
