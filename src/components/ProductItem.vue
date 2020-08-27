@@ -1,10 +1,10 @@
 <template>
   <li class="catalog__item" >
-    <a class="catalog__pic" href="#" @click.prevent="goToPage('product',{id: product.id})">
+    <a class="catalog__pic" href="#" @click.prevent="$emit('goToPage','product',{id: product.id})">
       <img :src="product.image" :alt="product.title">
     </a>
     <h3 class="catalog__title">
-      <a href="#" @click.prevent="goToPage('product',{id: product.id})">{{product.title}}</a>
+      <a href="#" @click.prevent="$emit('goToPage','product',{id: product.id})">{{product.title}}</a>
     </h3>
 
     <span class="catalog__price">{{product.price | numberFormat}} ₽</span>
