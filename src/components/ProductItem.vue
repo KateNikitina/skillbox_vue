@@ -1,10 +1,10 @@
 <template>
   <li class="catalog__item" >
-    <a class="catalog__pic" href="#" @click.prevent="goToPage('product',{id: product.id})">
+    <router-link class="catalog__pic" :to="{name:'productPage', params: {id: product.id}}">
       <img :src="product.image" :alt="product.title">
-    </a>
+    </router-link>
     <h3 class="catalog__title">
-      <a href="#" @click.prevent="goToPage('product',{id: product.id})">{{product.title}}</a>
+      <router-link :to="{name:'productPage', params: {id: product.id}}" >{{product.title}}</router-link>
     </h3>
 
     <span class="catalog__price">{{product.price | numberFormat}} ₽</span>
