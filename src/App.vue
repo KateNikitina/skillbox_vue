@@ -1,15 +1,21 @@
 <template>
- <router-view />
+  <div>
+    <Header/>
+    <router-view/>
+    <Footer/>
+  </div>
 </template>
 
 <script>
 
-const routes = {
-  main: 'MainPage',
-  product: 'ProductPage'
-};
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export default {
   name: 'App',
+  components: {
+    Header,
+    Footer
+  },
 };
 </script>
