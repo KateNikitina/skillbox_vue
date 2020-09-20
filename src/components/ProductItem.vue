@@ -1,17 +1,15 @@
 <template>
-  <li class="catalog__item" >
+  <li class="catalog__item">
     <router-link class="catalog__pic" :to="{name:'productPage', params: {id: product.id}}">
       <img :src="product.image" :alt="product.title">
     </router-link>
     <h3 class="catalog__title">
-      <router-link :to="{name:'productPage', params: {id: product.id}}" >{{product.title}}</router-link>
+      <router-link :to="{name:'productPage', params: {id: product.id}}">{{ product.title }}</router-link>
     </h3>
-
-    <span class="catalog__price">{{product.price | numberFormat}} ₽</span>
-<!--    <span class="catalog__title">{{category}} </span>-->
+    <span class="catalog__price">{{ product.price | numberFormat }} ₽</span>
     <ul class="colors colors--black">
-      <li class="colors__item" v-for="(color, index) in product.colors" :key="index">
-        <label class="colors__label" >
+      <li class="colors__item" v-for="color in product.colors" :key="color.id">
+        <label class="colors__label">
           <input class="colors__radio sr-only" type="radio" value="#73B6EA">
           <span class="colors__value" :style="`background-color: ${color.code};`"></span>
         </label>
@@ -27,24 +25,17 @@ import numberFormat from '@/helpers/numberFormat';
 
 export default {
   name: 'ProductItem',
-  props: ['product','categories'],
+  props: ['product'],
   data() {
     return {
       color: '#73B6EA',
     };
   },
-  filters:{
+  filters: {
     numberFormat
   },
-  methods:{
+  methods: {
     goToPage
   },
-  // computed:{
-  //   category(){
-  //     let category = '';
-  //     category = this.categories.filter((category) => this.product.categoryId === category.id)[0].title;
-  //     return category;
-  //   }
-  // }
 };
 </script>

@@ -10,9 +10,9 @@
         :price-from.sync="filterPriceFrom"
         :price-to.sync="filterPriceTo"
         :category-id.sync="filterCategoryId"
-        :color-code.sync="filterColorCode"/>
+        :color-id.sync="filterColorId"/>
       <section class="catalog">
-        <ProductList :products="products" :categories="categories"/>
+        <ProductList :products="products"/>
         <BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage"/>
       </section>
     </div>
@@ -21,9 +21,7 @@
 
 <script>
 
-import products from '@/data/products';
-import categories from '@/data/categories';
-
+import { API_BASE_URL } from '@/config';
 import ProductList from '@/components/ProductList.vue';
 import BasePagination from '@/components/BasePagination.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
@@ -42,39 +40,13 @@ export default {
       filterPriceFrom: 0,
       filterPriceTo: 0,
       filterCategoryId: 0,
-      filterColorCode: 0,
+      filterColorId: 0,
       page: 1,
       productsPerPage: 3,
       productsData: null
     };
   },
   computed: {
-    filteredProducts() {
-      let filteredProducts = products;
-      let arr = [];
-      if (this.filterColorCode !== 0) {
-        filteredProducts.map(i => {
-          let item = i.colorCode.filter(color => {
-            return color === this.filterColorCode;
-          });
-          item.length !== 0 ? arr.push(i) : '';
-        });
-        filteredProducts = arr;
-      }
-      if (this.filterPriceFrom > 0) {
-        filteredProducts = filteredProducts.filter((product) => product.price
-          >= this.filterPriceFrom);
-      }
-      if (this.filterPriceTo > 0) {
-        filteredProducts = filteredProducts.filter((product) => (product.price
-          <= this.filterPriceTo));
-      }
-      if (this.filterCategoryId > 0) {
-        filteredProducts = filteredProducts.filter((product) => product.categoryId
-          === this.filterCategoryId);
-      }
-      return filteredProducts;
-    },
     products() {
       return this.productsData
         ? this.productsData.items.map(product => {
@@ -85,9 +57,6 @@ export default {
         })
         : [];
     },
-    categories() {
-      return categories;
-    },
     countProducts() {
       return this.productsData ? this.productsData.pagination.total : 0;
     },
@@ -95,12 +64,36 @@ export default {
   watch: {
     page() {
       this.loadProducts();
-    }
+    },
+    filterPriceFrom() {
+      this.loadProducts();
+    },
+    filterPriceTo() {
+      this.loadProducts();
+    },
+    filterCategoryId() {
+      this.loadProducts();
+    },
+    filterColorId() {
+      this.loadProducts();
+    },
   },
   methods: {
     loadProducts() {
-      axios.get(`http://vue-study.dev.creonit.ru/api/products?page=${this.page}&limit=${this.productsPerPage}`)
-        .then(response => this.productsData = response.data);
+      clearTimeout(this.loadProductsTimer);
+      this.loadProductsTimer = setTimeout(() => {
+        axios.get(API_BASE_URL + `/api/products`, {
+          params: {
+            page: this.page,
+            limit: this.productsPerPage,
+            categoryId: this.filterCategoryId,
+            minPrice: this.filterPriceFrom,
+            maxPrice: this.filterPriceTo,
+            colorId: this.filterColorId,
+          }
+        })
+          .then(response => this.productsData = response.data);
+      }, 0);
     }
   },
   created() {
