@@ -12,6 +12,17 @@
         :category-id.sync="filterCategoryId"
         :color-id.sync="filterColorId"/>
       <section class="catalog">
+        <div class="loader" v-if="productsLoading">
+          <div class="l_main">
+            <div class="l_square"><span></span><span></span><span></span></div>
+            <div class="l_square"><span></span><span></span><span></span></div>
+            <div class="l_square"><span></span><span></span><span></span></div>
+            <div class="l_square"><span></span><span></span><span></span></div>
+          </div>
+        </div>
+        <div v-if="productsLoadingFailed">Произошла ошибка при загрузке товаров
+          <button @click.prevent="loadProducts">Попробовать еще раз</button>
+        </div>
         <ProductList :products="products"/>
         <BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage"/>
       </section>
@@ -43,7 +54,9 @@ export default {
       filterColorId: 0,
       page: 1,
       productsPerPage: 3,
-      productsData: null
+      productsData: null,
+      productsLoading: false,
+      productsLoadingFailed: false
     };
   },
   computed: {
@@ -80,6 +93,8 @@ export default {
   },
   methods: {
     loadProducts() {
+      this.productsLoadingFailed = false;
+      this.productsLoading = true;
       clearTimeout(this.loadProductsTimer);
       this.loadProductsTimer = setTimeout(() => {
         axios.get(API_BASE_URL + `/api/products`, {
@@ -92,8 +107,10 @@ export default {
             colorId: this.filterColorId,
           }
         })
-          .then(response => this.productsData = response.data);
-      }, 0);
+          .then(response => this.productsData = response.data)
+          .catch(() => this.productsLoadingFailed = true)
+          .then(() => this.productsLoading = false);
+      }, 5000);
     }
   },
   created() {
