@@ -1,5 +1,6 @@
 <template>
-  <router-link class="header__cart" :to="{name:'cart'}" aria-label="Корзина с товарами">
+  <img src="img/loading.gif" v-if="loading" style="height: 30px;" />
+  <router-link class="header__cart" :to="{name:'cart'}" aria-label="Корзина с товарами" v-else>
     <svg width="30" height="21" fill="currentColor">
       <use xlink:href="#icon-cart"></use>
     </svg>
@@ -8,8 +9,15 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
-  name: 'CartIndicator'
+  name: 'CartIndicator',
+  computed: {
+    ...mapGetters({
+      loading: 'getCartLoading'
+    }),
+  }
 };
 
 </script>

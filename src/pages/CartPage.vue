@@ -12,15 +12,21 @@
       <h1 class="content__title">Корзина</h1>
       <span class="content__info">3 товара</span>
     </div>
-
     <section class="cart">
-      <form class="cart__form form" action="#" method="POST">
+      <div class="loader" v-if="loading">
+        <div class="l_main">
+          <div class="l_square"><span></span><span></span><span></span></div>
+          <div class="l_square"><span></span><span></span><span></span></div>
+          <div class="l_square"><span></span><span></span><span></span></div>
+          <div class="l_square"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+      <form class="cart__form form" action="#" method="POST" v-else>
         <div class="cart__field">
           <ul class="cart__list">
             <CartItem v-for="item in products" :key="item.productId" :item="item"/>
           </ul>
         </div>
-
         <div class="cart__block">
           <p class="cart__desc">
             Мы&nbsp;посчитаем стоимость доставки на&nbsp;следующем этапе
@@ -52,7 +58,8 @@ export default {
   computed: {
     ...mapGetters({
       products: 'cartDetailProducts',
-      totalPrice: 'cartTotalPrice'
+      totalPrice: 'cartTotalPrice',
+      loading: 'getCartLoading'
     }),
   }
 };
