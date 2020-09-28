@@ -13,17 +13,18 @@
         </svg>
       </button>
     </div>
-    <button class="button button--primery" type="submit" @click="$emit('counter-change', counter)">В корзину</button>
+    <button class="button button--primery" type="submit" @click="$emit('counter-change', counter)" :disabled="dis">В корзину</button>
   </div>
 
 </template>
 
 <script>
 export default {
+  props: ['dis'],
   name: 'FormCurrent',
   data() {
     return {
-      counter: 1
+      counter: 1,
     };
   },
   methods: {

@@ -52,7 +52,9 @@
                 </li>
               </ul>
             </fieldset>
-            <FormCurrent @counter-change="onAmountCountChange"/>
+            <FormCurrent @counter-change="onAmountCountChange" :dis=productAddSending />
+            <div v-show="productAdded">Товар добавлен в корзину</div>
+            <div v-show="productAddSending">Добавляем товар в корзину</div>
           </form>
         </div>
       </div>
@@ -110,6 +112,7 @@ import numberFormat from '@/helpers/numberFormat';
 import FormCurrent from '@/components/FormCurrent';
 import axios from 'axios';
 import { API_BASE_URL } from '@/config';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'ProductPage',
@@ -119,7 +122,10 @@ export default {
       productAmount: 1,
       productData: null,
       productLoading: false,
-      productLoadingFailed: false
+      productLoadingFailed: false,
+
+      productAdded: false,
+      productAddSending: false
     };
   },
   filters: {
@@ -138,14 +144,21 @@ export default {
 
   },
   methods: {
+    ...mapActions(['addProductCart']),
     onAmountCountChange: function (amount) {
       this.productAmount = amount;
     },
     addToCart() {
-      this.$store.commit('addProductToCart', {
+      this.productAdded = false;
+      this.productAddSending = true;
+      this.addProductCart({
         productId: this.product.id,
         amount: this.productAmount
-      });
+      })
+        .then(() => {
+          this.productAdded = true;
+          this.productAddSending = false;
+        });
     },
     loadProduct() {
       this.productLoadingFailed = false;
