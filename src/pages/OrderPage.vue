@@ -14,7 +14,6 @@
       </ul>
       <h1 class="content__title">Оформление заказа</h1>
     </div>
-
     <div class="loader" v-if="orderPageLoading">
       <div class="l_main">
         <div class="l_square"><span></span><span></span><span></span></div>
@@ -23,8 +22,6 @@
         <div class="l_square"><span></span><span></span><span></span></div>
       </div>
     </div>
-
-
     <section class="cart" v-else>
       <form class="cart__form form" action="#" method="POST" @submit.prevent="order">
         <div class="cart__field">
@@ -124,7 +121,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      products: 'cartDetailProducts',
+      products: 'orderDetailProducts',
       totalPrice: 'cartTotalPrice',
       loading: 'getCartLoading'
     }),
@@ -146,6 +143,11 @@ export default {
           .then(response => {
             this.$store.commit('resetCart');
             this.orderPageLoading = false;
+            this.$store.commit('updateOrderInfo', response.data);
+            this.$router.push({
+              name: 'orderInfo',
+              params: { id: response.data.id }
+            });
           })
           .catch(error => {
             this.formError = error.response.data.error.request || {};
