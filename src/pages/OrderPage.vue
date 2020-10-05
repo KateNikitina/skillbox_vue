@@ -15,15 +15,30 @@
       <h1 class="content__title">Оформление заказа</h1>
     </div>
 
-    <section class="cart">
-      <form class="cart__form form" action="#" method="POST">
+    <div class="loader" v-if="orderPageLoading">
+      <div class="l_main">
+        <div class="l_square"><span></span><span></span><span></span></div>
+        <div class="l_square"><span></span><span></span><span></span></div>
+        <div class="l_square"><span></span><span></span><span></span></div>
+        <div class="l_square"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+
+
+    <section class="cart" v-else>
+      <form class="cart__form form" action="#" method="POST" @submit.prevent="order">
         <div class="cart__field">
           <div class="cart__data">
-            <BaseFormText title="ФИО" :error="formError.name" v-model="formData.name" placeholder="Введите ваше полное имя"/>
-            <BaseFormText title="Адрес доставки" :error="formError.address" v-model="formData.address" placeholder="Введите ваш адрес"/>
-            <BaseFormText title="Телефон" type="tel" :error="formError.phone" v-model="formData.phone" placeholder="Введите ваш телефон"/>
-            <BaseFormText title="Email" type="email" :error="formError.email" v-model="formData.email" placeholder="Введи ваш Email"/>
-            <BaseFormTextarea title="Комментарий к заказу" :error="formError.comments" v-model="formData.comments" placeholder="Ваши пожелания"/>
+            <BaseFormText title="ФИО" :error="formError.name" v-model="formData.name"
+                          placeholder="Введите ваше полное имя"/>
+            <BaseFormText title="Адрес доставки" :error="formError.address" v-model="formData.address"
+                          placeholder="Введите ваш адрес"/>
+            <BaseFormText title="Телефон" type="tel" :error="formError.phone" v-model="formData.phone"
+                          placeholder="Введите ваш телефон"/>
+            <BaseFormText title="Email" type="email" :error="formError.email" v-model="formData.email"
+                          placeholder="Введи ваш Email"/>
+            <BaseFormTextarea title="Комментарий к заказу" :error="formError.comment" v-model="formData.comment"
+                              placeholder="Ваши пожелания"/>
           </div>
 
           <div class="cart__options">
@@ -62,16 +77,17 @@
         </div>
 
         <div class="cart__block">
-          <ProductsInOrderPage :products="products" />
+          <ProductsInOrderPage :products="products" :loading="loading"/>
           <div class="cart__total">
             <p>Доставка: <b>500 ₽</b></p>
-            <p>Итого: <b>{{products.length}}</b> товара на сумму <b>{{ totalPrice | numberFormat }} ₽</b></p>
+            <p>Итого: <b>{{ products.length }}</b> товара на сумму <b>{{ totalPrice | numberFormat }} ₽</b></p>
           </div>
           <button class="cart__button button button--primery" type="submit">Оформить заказ</button>
         </div>
-        <div class="cart__error form__error-block">
+
+        <div class="cart__error form__error-block" v-if="formErrorMessage">
           <h4>Заявка не отправлена!</h4>
-          <p>Похоже произошла ошибка. Попробуйте отправить снова или перезагрузите страницу.</p>
+          <p>{{ formErrorMessage }}</p>
         </div>
       </form>
     </section>
@@ -85,6 +101,8 @@ import BaseFormTextarea from '@/components/BaseFormTextarea.vue';
 import ProductsInOrderPage from '@/components/ProductsInOrderPage.vue';
 import { mapGetters } from 'vuex';
 import numberFormat from '@/helpers/numberFormat';
+import axios from 'axios';
+import { API_BASE_URL } from '@/config';
 
 export default {
   name: 'OrderPage',
@@ -96,7 +114,9 @@ export default {
   data() {
     return {
       formData: {},
-      formError: {}
+      formError: {},
+      formErrorMessage: '',
+      orderPageLoading: false
     };
   },
   filters: {
@@ -108,6 +128,32 @@ export default {
       totalPrice: 'cartTotalPrice',
       loading: 'getCartLoading'
     }),
+  },
+  methods: {
+    order() {
+      this.formError = {};
+      this.formErrorMessage = '';
+      this.orderPageLoading = true;
+      clearTimeout(this.loadOrderTimer);
+      this.loadOrderTimer = setTimeout(() => {
+        axios.post(API_BASE_URL + '/api/orders', {
+          ...this.formData
+        }, {
+          params: {
+            userAccessKey: this.$store.state.userAccessKey
+          }
+        })
+          .then(response => {
+            this.$store.commit('resetCart');
+            this.orderPageLoading = false;
+          })
+          .catch(error => {
+            this.formError = error.response.data.error.request || {};
+            this.formErrorMessage = error.response.data.error.message;
+            this.orderPageLoading = false;
+          });
+      }, 3000);
+    }
   }
 };
 </script>
