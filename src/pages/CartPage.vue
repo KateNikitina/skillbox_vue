@@ -10,7 +10,7 @@
         </li>
       </ul>
       <h1 class="content__title">Корзина</h1>
-      <span class="content__info">3 товара</span>
+      <span class="content__info">{{products.length}} товара</span>
     </div>
     <section class="cart">
       <div class="loader" v-if="loading">
@@ -35,9 +35,9 @@
             Итого: <span>{{ totalPrice | numberFormat }} ₽</span>
           </p>
 
-          <button class="cart__button button button--primery" type="submit">
+          <router-link v-if="products" tag="button" :to="{name:'order'}" class="cart__button button button--primery" type="submit">
             Оформить заказ
-          </button>
+          </router-link>
         </div>
       </form>
     </section>

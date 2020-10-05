@@ -63,9 +63,6 @@ export default new Vuex.Store({
   actions: {
 
     deleteProductFromCart(context, { productId }) {
-      //console.log(productId);
-      // return (new Promise(resolve => setTimeout(resolve, 2000)))
-      //.then(() => {
       return axios.delete(API_BASE_URL + `/api/baskets/products`, {
         params: {
           productId: productId,
@@ -73,11 +70,7 @@ export default new Vuex.Store({
         }
       })
         .then(response => {
-          //console.log(response)
-          //context.commit('deleteCartProduct', productId);
-          //context.commit('updateCartProductsData', response.data.items);
         });
-      //});
     },
     addProductCart(context, { productId, amount }) {
       context.commit('updateCartLoading', true);
